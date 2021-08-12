@@ -21,8 +21,8 @@ app.use(express.json());
 //     next();
 // });
 
-app.use("/api/v1/portfolio", cors(corsOptions), portfolioRouter);
-app.use("/api/v1/team", cors(corsOptions), teamRouter);
+app.use("/api/v1/portfolio", portfolioRouter);
+app.use("/api/v1/team", teamRouter);
 
 console.log("PORT being used: ", PORT);
 
