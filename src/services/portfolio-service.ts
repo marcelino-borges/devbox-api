@@ -15,7 +15,7 @@ const portfolio: IPortfolioItem[] = portfolioJSON.map((item: any) => {
     }
 });
 
-export const getAllJobs = async (_req: Request, res: Response) => {
+export const getAllJobs = async (_req: Request, res: Response, next: any) => {
     try {
         return res.status(200).json(portfolio);
     } catch(e: any) {
@@ -23,7 +23,7 @@ export const getAllJobs = async (_req: Request, res: Response) => {
     }
 }
 
-export const getJobByName = (req: Request, res: Response) => {
+export const getJobByName = (req: Request, res: Response, next: any) => {
     try {
         const nameSearched: string = req.params.name;
 
@@ -42,7 +42,7 @@ export const getJobByName = (req: Request, res: Response) => {
     }
 }
 
-export const getJobById = (req: Request, res: Response) => {
+export const getJobById = (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
         let itemFound;

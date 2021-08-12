@@ -14,7 +14,7 @@ const team: ITeamMember[] = teamJSON.map((item: any) => {
     }
 });
 
-export const getAllMembers = async (_req: Request, res: Response) => {
+export const getAllMembers = async (_req: Request, res: Response, next: any) => {
     try {
         return res.status(200).json(team);
     } catch(e: any) {
@@ -22,7 +22,7 @@ export const getAllMembers = async (_req: Request, res: Response) => {
     }
 }
 
-export const getMemberByName = (req: Request, res: Response) => {
+export const getMemberByName = (req: Request, res: Response, next: any) => {
     try {
         const firstNameSearched: string = req.query.firstName as string;
         const lastNameSearched: string = req.query.lastName as string;
@@ -46,7 +46,7 @@ export const getMemberByName = (req: Request, res: Response) => {
     }
 }
 
-export const getMemberById = (req: Request, res: Response) => {
+export const getMemberById = (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
         let itemFound;
