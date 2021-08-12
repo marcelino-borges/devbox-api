@@ -22,7 +22,7 @@ var corsOptions = {
     optionsSuccessStatus: 200, // legacy browser support
 }
 
-portfolioRouter.get("/", cors(corsOptions), portfolioController.getAllJobs);
+portfolioRouter.get("/", cors(), portfolioController.getAllJobs);
 portfolioRouter.get("/id/:id", cors(corsOptions), portfolioController.getJobById);
 portfolioRouter.get("/name/:name", cors(corsOptions), portfolioController.getJobByName);
 
