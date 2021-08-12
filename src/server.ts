@@ -27,7 +27,6 @@ var corsOptions = {
     optionsSuccessStatus: 200, // legacy browser support
 }
 
-app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
@@ -39,8 +38,8 @@ app.use(express.json());
 //     next();
 //   });
 
-app.use("/api/v1/portfolio", portfolioRouter);
-app.use("/api/v1/team", teamRouter);
+app.use("/api/v1/portfolio", cors(corsOptions), portfolioRouter);
+app.use("/api/v1/team", cors(corsOptions), teamRouter);
 
 console.log("PORT being used: ", PORT);
 
