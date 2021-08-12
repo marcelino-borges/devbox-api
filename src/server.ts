@@ -43,7 +43,7 @@ var corsOptions = {
     optionsSuccessStatus: 200, // legacy browser support
 }
 app.use(cors());
-app.get("/api/v1/portfolio", cors(), portfolioController.getAllJobs);
+app.get("/api/v1/portfolio", portfolioController.getAllJobs);
 app.use("/api/v1/team", teamRouter);
 
 console.log("PORT being used: ", PORT);
