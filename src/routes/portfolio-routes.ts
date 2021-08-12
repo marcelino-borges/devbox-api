@@ -12,9 +12,11 @@ var corsWhitelist = [
 var corsOptions = {
     origin: function (origin: any, callback: any) {
         if (corsWhitelist.indexOf(origin) !== -1) {
-          callback(null, true)
+            console.log("origin known");
+            callback(null, true);
         } else {
-          callback(new Error('Not allowed by CORS'))
+            console.log("origin not known");
+            callback(new Error('Not allowed by CORS'));
         }
       },
     optionsSuccessStatus: 200, // legacy browser support
