@@ -2,18 +2,21 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from 'helmet';
 import express from "express";
+import firebase from 'firebase/app';
 import portfolioRouter from "./routes/portfolio-routes";
 import teamRouter from "./routes/team-routes";
 
 dotenv.config();
-let PORT = parseInt(process.env.PORT as string, 10);
-console.log("PORT: ", PORT);
+const firebaseApp = firebase.initializeApp()
+
+const PORT = parseInt(process.env.PORT as string, 10);
 
 const app = express();
 
 var corsWhitelist = [
-    'http://devbox.eng.br',
-    'https://devbox.eng.br'
+  'http://localhost:3000',
+  'http://devbox.eng.br',
+  'https://devbox.eng.br'
 ];
 
 var corsOptions = {
