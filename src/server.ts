@@ -2,12 +2,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from 'helmet';
 import express from "express";
-import firebase from 'firebase/app';
 import portfolioRouter from "./routes/portfolio-routes";
 import teamRouter from "./routes/team-routes";
 
 dotenv.config();
-const firebaseApp = firebase.initializeApp()
 
 const PORT = parseInt(process.env.PORT as string, 10);
 
