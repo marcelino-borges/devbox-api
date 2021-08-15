@@ -14,7 +14,6 @@ const PORT = parseInt(process.env.PORT as string, 10);
 const app = express();
 
 var corsWhitelist = [
-  'http://localhost:3000',
   'http://devbox.eng.br',
   'https://devbox.eng.br'
 ];
