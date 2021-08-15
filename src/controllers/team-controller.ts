@@ -13,3 +13,7 @@ export const getMemberById = (req: Request, res: Response, next: any) => {
 export const getMemberByName = (req: Request, res: Response, next: any) => {
     return teamService.getMemberByName(req, res, next);
 }
+
+export const getMemberByEmail = (req: Request, res: Response, next: any) => {
+    return teamService.getMemberByEmail(req, res, next);
+}

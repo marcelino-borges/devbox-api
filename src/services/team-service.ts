@@ -8,6 +8,7 @@ const team: ITeamMember[] = teamJSON.map((item: any) => {
         firstName: item.firstName,
         lastName: item.lastName,
         mainRole: item.mainRole,
+        email: item.email,
         secondaryRoles: item.secondaryRoles,
         memberSince: new Date(item.memberSince),
         picture: item.picture,
@@ -49,17 +50,34 @@ export const getMemberByName = (req: Request, res: Response, next: any) => {
 export const getMemberById = (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
-        let itemFound;
+        let memberFound;
 
         team.find(member => {
             if(member.id === idSearched)
-                itemFound = member;                
+                memberFound = member;                
         });
 
-        if(itemFound)
-            return res.status(200).json(itemFound);
+        if(memberFound)
+            return res.status(200).json(memberFound);
         return res.status(400).json(null);
-    } catch(e) {
+    } catch(e: any) {
+        return res.status(500).json({ error: e.message });
+    }
+}
+
+export const getMemberByEmail = (req: Request, res: Response, next: any) => {
+    try {
+        let memberFound;
+
+        team.find(member => {
+            if(member.email === req.params.email)
+                memberFound = member;                
+        });
+
+        if(memberFound)
+            return res.status(200).json(memberFound);
+        return res.status(400).json(null);
+    } catch(e: any) {
         return res.status(500).json({ error: e.message });
     }
 }
