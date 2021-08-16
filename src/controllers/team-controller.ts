@@ -17,3 +17,15 @@ export const getMemberByName = (req: Request, res: Response, next: any) => {
 export const getMemberByEmail = (req: Request, res: Response, next: any) => {
     return teamService.getMemberByEmail(req, res, next);
 }
+
+export const createTeammate = (req: Request, res: Response, next: any) => {
+    return teamService.createTeammate(req, res, next);
+}
+
+export const updateTeammate = (req: Request, res: Response, next: any) => {
+    return teamService.updateTeammate(req, res, next);
+}
+
+export const deleteTeammate = (req: Request, res: Response, next: any) => {
+    return teamService.deleteTeammate(req, res, next);
+}

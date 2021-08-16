@@ -1,83 +1,122 @@
 import { Request, Response } from "express";
-import { ITeamMember } from './../models/team';
-import teamJSON from "./../data/team";
-
-const team: ITeamMember[] = teamJSON.map((item: any) => {
-    return {
-        id: item.id,
-        firstName: item.firstName,
-        lastName: item.lastName,
-        mainRole: item.mainRole,
-        email: item.email,
-        secondaryRoles: item.secondaryRoles,
-        memberSince: new Date(item.memberSince),
-        picture: item.picture,
-    }
-});
+import team, { ITeamMember } from '../models/team-models';
+import AppError, { INVALID_QUERY, NOT_CREATED, NO_TEAMMATES, TEAMMATE_ALREADY_EXIST, TEAMMATE_NOT_FOUND } from './../errors/app-error';
 
 export const getAllMembers = async (_req: Request, res: Response, next: any) => {
     try {
-        return res.status(200).json(team);
+        const found = await team.find();
+        if(found && found.length > 0)
+            return res.status(200).json(found);
+        else
+            return res.status(400).json(new AppError(NO_TEAMMATES));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }
 
-export const getMemberByName = (req: Request, res: Response, next: any) => {
+export const getMemberByName = async (req: Request, res: Response, next: any) => {
     try {
         const firstNameSearched: string = req.query.firstName as string;
         const lastNameSearched: string = req.query.lastName as string;
 
-        if(!firstNameSearched || !lastNameSearched)
-            return res.status(400).json(null);
+        if(!firstNameSearched && !lastNameSearched)
+            return res.status(400).json(new AppError(INVALID_QUERY));
 
-        let memberFound;
+        let membersFound = await team.find({ $or: [ { firstName: firstNameSearched }, { lastName: lastNameSearched }]});
 
-        team.find(member => {
-            if(member.firstName.toLowerCase().includes(firstNameSearched.toLowerCase()) &&
-                member.lastName.toLowerCase().includes(lastNameSearched.toLowerCase()))
-                memberFound = member;
-        });
-
-        if(memberFound)
-            return res.status(200).json(memberFound);
-        return res.status(400).json(null);
+        if(membersFound && membersFound.length > 0)
+            return res.status(200).json(membersFound);
+        else
+            return res.status(400).json(new AppError(TEAMMATE_NOT_FOUND));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }
 
-export const getMemberById = (req: Request, res: Response, next: any) => {
+export const getMemberById = async (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
-        let memberFound;
-
-        team.find(member => {
-            if(member.id === idSearched)
-                memberFound = member;                
-        });
+        let memberFound = await team.findOne({ id: idSearched });
 
         if(memberFound)
             return res.status(200).json(memberFound);
-        return res.status(400).json(null);
+        else
+            return res.status(400).json(new AppError(TEAMMATE_NOT_FOUND));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }
 
-export const getMemberByEmail = (req: Request, res: Response, next: any) => {
+export const getMemberByEmail = async (req: Request, res: Response, next: any) => {
     try {
-        let memberFound;
-
-        team.find(member => {
-            if(member.email === req.params.email)
-                memberFound = member;                
-        });
+        let memberFound = await team.findOne({ email: req.params.email });
 
         if(memberFound)
             return res.status(200).json(memberFound);
-        return res.status(400).json(null);
+        else
+            return res.status(400).json(new AppError(TEAMMATE_NOT_FOUND));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
+    }
+}
+
+export const createTeammate = async (req: Request, res: Response, next: any) => {
+    try {
+        const newTeammate: ITeamMember = req.body;
+
+        const foundTeammate = await team.findOne({ 
+            $or: [{ id: newTeammate.id }, { email: newTeammate.email }]
+        });
+
+        if(foundTeammate)
+            return res.status(400).json(new AppError(TEAMMATE_ALREADY_EXIST));
+
+        const docCreated = await team.create(newTeammate);
+
+        if(docCreated)
+            return res.status(201).json();
+        else
+            return res.status(400).json(new AppError(NOT_CREATED));
+    } catch(e: any) {
+        return res.status(500).json(new AppError(e.message, 500));
+    }
+}
+
+export const updateTeammate = async (req: Request, res: Response, next: any) => {
+    try {
+        const teammate: ITeamMember = req.body;
+
+        const found = await team.findOneAndReplace({ 
+            $or: [{ id: teammate.id }, { email: teammate.email }]}, 
+            teammate,
+            { new: true } //Returns the updated json from database
+        );
+
+        if(found)
+            return res.status(200).json(found);
+        else
+            return res.status(400).json(new AppError(TEAMMATE_NOT_FOUND));
+    } catch(e: any) {
+        return res.status(500).json(new AppError(e.message, 500));
+    }
+}
+
+export const deleteTeammate = async (req: Request, res: Response, next: any) => {
+    try {
+        const idSearched: number | undefined = Number.parseInt(req.query.id as string);
+        const emailSearched: string = req.query.email as string;
+        let found;
+
+        if(idSearched)
+            found = await team.findOneAndDelete({ id: idSearched });
+        else if(emailSearched)
+            found = await team.findOneAndDelete({ email: emailSearched });
+
+        if(found)
+            return res.status(200).json();
+        else
+            return res.status(400).json(new AppError(TEAMMATE_NOT_FOUND));
+    } catch(e: any) {
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }

@@ -1,61 +1,113 @@
 
 import { Request, Response } from "express";
-import { IPortfolioItem } from "../models/portfolio";
-import portfolioJSON  from "./../data/portfolio";
-
-const portfolio: IPortfolioItem[] = portfolioJSON.map((item: any) => {
-    return {
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        highlightImg: item.highlightImg,
-        imgs: item.imgs,
-        storeUrl: item.storeUrl,
-        otherUrls: item.otherUrls
-    }
-});
+import AppError, { INVALID_QUERY, NOT_CREATED, NO_PORTFOLIO, NO_TEAMMATES, PORTFOLIO_ALREADY_EXIST, TEAMMATE_NOT_FOUND } from "../errors/app-error";
+import portfolio from "../models/portfolio-models";
+import { IPortfolioItem } from "../models/portfolio-models";
+import { PORTFOLIO_NOT_FOUND } from './../errors/app-error';
 
 export const getAllJobs = async (_req: Request, res: Response, next: any) => {
     try {
-        return res.status(200).json(portfolio);
+        const found = await portfolio.find();
+
+        if(found && found.length > 0)
+            return res.status(200).json(found);
+        else
+            return res.status(400).json(new AppError(NO_PORTFOLIO));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }
 
-export const getJobByName = (req: Request, res: Response, next: any) => {
+export const getJobByName = async (req: Request, res: Response, next: any) => {
     try {
         const nameSearched: string = req.params.name;
 
-        let itemFound;
+        if(!nameSearched)
+            return res.status(400).json(new AppError(INVALID_QUERY));
 
-        portfolio.find(item => {
-            if(item.name.toLowerCase().includes(nameSearched))
-                itemFound = item;
-        });
+        const jobsFound = await portfolio.find({ name: nameSearched });
 
-        if(itemFound)
-            return res.status(200).json(itemFound);
-        return res.status(400).json(null);
+        if(jobsFound && jobsFound.length > 0)
+            return res.status(200).json(jobsFound);
+        else
+            return res.status(400).json(new AppError(PORTFOLIO_NOT_FOUND));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }
 
-export const getJobById = (req: Request, res: Response, next: any) => {
+export const getJobById = async (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
-        let itemFound;
+        
+        const jobFound = await portfolio.findOne({ id: idSearched });
 
-        portfolio.find(item => {
-            if(item.id === idSearched)
-                itemFound = item;                
+        if(jobFound)
+            return res.status(200).json(jobFound);
+        else
+            return res.status(400).json(new AppError(PORTFOLIO_NOT_FOUND));
+    } catch(e: any) {
+        return res.status(500).json(new AppError(e.message, 500));
+    }
+}
+
+export const createPortfolio = async (req: Request, res: Response, next: any) => {
+    try {
+        const newJob: IPortfolioItem = req.body;
+
+        const foundJob = await portfolio.findOne({ 
+            $or: [{ id: newJob.id }, { name: newJob.name }] 
         });
 
-        if(itemFound)
-            return res.status(200).json(itemFound);
-        return res.status(400).json(null);
+        if(foundJob)
+            return res.status(400).json(new AppError(PORTFOLIO_ALREADY_EXIST));
+
+        const docCreated = await portfolio.create(newJob);
+
+        if(docCreated)
+            return res.status(201).json();
+        else
+            return res.status(400).json(new AppError(NOT_CREATED));
     } catch(e: any) {
-        return res.status(500).json({ error: e.message });
+        return res.status(500).json(new AppError(e.message, 500));
+    }
+}
+
+export const updatePortfolio = async (req: Request, res: Response, next: any) => {
+    try {
+        const job: IPortfolioItem = req.body;
+
+        const found = await portfolio.findOneAndReplace({ 
+            $or: [{ id: job.id }, { email: job.name }]}, 
+            job,
+            { new: true } //Returns the updated json from database
+        );
+
+        if(found)
+            return res.status(200).json(found);
+        else
+            return res.status(400).json(new AppError(PORTFOLIO_NOT_FOUND));
+    } catch(e: any) {
+        return res.status(500).json(new AppError(e.message, 500));
+    }
+}
+
+export const deletePortfolio = async (req: Request, res: Response, next: any) => {
+    try {
+        const idSearched: number | undefined = Number.parseInt(req.query.id as string);
+        const nameSearched: string = req.query.name as string;
+        let found;
+
+        if(idSearched)
+            found = await portfolio.findOneAndDelete({ id: idSearched });
+        else if(nameSearched)
+            found = await portfolio.findOneAndDelete({ name: nameSearched });
+
+        if(found)
+            return res.status(200).json();
+        else
+            return res.status(400).json(new AppError(PORTFOLIO_NOT_FOUND));
+    } catch(e: any) {
+        return res.status(500).json(new AppError(e.message, 500));
     }
 }
