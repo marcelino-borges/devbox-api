@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 export interface IPortfolioItem {
-  id: number;
+  _id?: number;
   name: string;
   description: string;
   highlightImg: string;
@@ -14,7 +14,7 @@ export interface IPortfolioItem {
 }
 
 const schema = new Schema<IPortfolioItem>({
-  id: { type: Number, required: true },
+  _id: { type: Number },
   name: { type: String, required: true },
   description: { type: String, required: true },
   highlightImg: { type: String, required: true },

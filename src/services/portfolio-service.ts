@@ -40,7 +40,7 @@ export const getJobById = async (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
         
-        const jobFound = await portfolio.findOne({ id: idSearched });
+        const jobFound = await portfolio.findOne({ _id: idSearched });
 
         if(jobFound)
             return res.status(200).json(jobFound);
@@ -56,7 +56,7 @@ export const createPortfolio = async (req: Request, res: Response, next: any) =>
         const newJob: IPortfolioItem = req.body;
 
         const foundJob = await portfolio.findOne({ 
-            $or: [{ id: newJob.id }, { name: newJob.name }] 
+            $or: [{ _id: newJob._id }, { name: newJob.name }] 
         });
 
         if(foundJob)
@@ -78,7 +78,7 @@ export const updatePortfolio = async (req: Request, res: Response, next: any) =>
         const job: IPortfolioItem = req.body;
 
         const found = await portfolio.findOneAndReplace({ 
-            $or: [{ id: job.id }, { email: job.name }]}, 
+            $or: [{ _id: job._id }, { email: job.name }]}, 
             job,
             { new: true } //Returns the updated json from database
         );
@@ -99,7 +99,7 @@ export const deletePortfolio = async (req: Request, res: Response, next: any) =>
         let found;
 
         if(idSearched)
-            found = await portfolio.findOneAndDelete({ id: idSearched });
+            found = await portfolio.findOneAndDelete({ _id: idSearched });
         else if(nameSearched)
             found = await portfolio.findOneAndDelete({ name: nameSearched });
 

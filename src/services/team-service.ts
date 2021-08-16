@@ -36,7 +36,7 @@ export const getMemberByName = async (req: Request, res: Response, next: any) =>
 export const getMemberById = async (req: Request, res: Response, next: any) => {
     try {
         const idSearched = Number.parseInt(req.params.id, 10);
-        let memberFound = await team.findOne({ id: idSearched });
+        let memberFound = await team.findOne({ _id: idSearched });
 
         if(memberFound)
             return res.status(200).json(memberFound);
@@ -65,7 +65,7 @@ export const createTeammate = async (req: Request, res: Response, next: any) => 
         const newTeammate: ITeamMember = req.body;
 
         const foundTeammate = await team.findOne({ 
-            $or: [{ id: newTeammate.id }, { email: newTeammate.email }]
+            $or: [{ _id: newTeammate._id }, { email: newTeammate.email }]
         });
 
         if(foundTeammate)
@@ -87,7 +87,7 @@ export const updateTeammate = async (req: Request, res: Response, next: any) => 
         const teammate: ITeamMember = req.body;
 
         const found = await team.findOneAndReplace({ 
-            $or: [{ id: teammate.id }, { email: teammate.email }]}, 
+            $or: [{ _id: teammate._id }, { email: teammate.email }]}, 
             teammate,
             { new: true } //Returns the updated json from database
         );
@@ -108,7 +108,7 @@ export const deleteTeammate = async (req: Request, res: Response, next: any) => 
         let found;
 
         if(idSearched)
-            found = await team.findOneAndDelete({ id: idSearched });
+            found = await team.findOneAndDelete({ _id: idSearched });
         else if(emailSearched)
             found = await team.findOneAndDelete({ email: emailSearched });
 
