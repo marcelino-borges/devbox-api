@@ -15,7 +15,7 @@ import {
 } from "./ftp-service";
 import { replaceAllSpacesByUnderlines } from "../utils/utils";
 
-/*// Modelo objeto de um arquivo - req.file
+/*// Model of a file object: req.file
     {
         fieldname: 'img', // Nome precisa bater com o nome passado no upload.single("img") em files.routes.ts
         originalname: '3333.PNG',
