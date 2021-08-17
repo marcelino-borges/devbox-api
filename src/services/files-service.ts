@@ -1,5 +1,7 @@
 
 import { Request, Response } from "express";
+import multer from "multer";
+import fs from "fs";
 import AppError, {
     INVALID_FILE_UPLOADED, 
     MISSING_PARAMS_DELETE, 
