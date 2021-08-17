@@ -12,6 +12,10 @@ export const PORTFOLIO_ALREADY_EXIST = "Portfolio already exists.";
 export const PORTFOLIO_NOT_FOUND = "Portfolio not found.";
 export const NO_PORTFOLIO = "No portfolio found.";
 
+export const INVALID_FILE_UPLOADED = "The uploaded file is invalid (eg. 'undefined').";
+export const MISSING_USER_EMAIL_SENDER = "The user email is missing from the form-data sent in the body of the request.";
+export const MISSING_PARAMS_DELETE = "Parameter necessary for deletion is missing.";
+
 class AppError {
     public readonly message: string;
     public readonly statusCode: number;
