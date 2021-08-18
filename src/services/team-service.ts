@@ -114,7 +114,7 @@ export const deleteTeammate = async (req: Request, res: Response, next: any) => 
             found = await team.findOneAndDelete({ email: emailSearched });
 
         if(found)
-            return res.status(200).json();
+            return res.status(200).json(found);
         else
             return res.status(400).json(new AppError(TEAMMATE_NOT_FOUND));
     } catch(e: any) {
