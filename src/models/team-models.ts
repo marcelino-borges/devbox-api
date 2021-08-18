@@ -12,7 +12,7 @@ export interface ITeamMember {
   }
   
   const schema = new Schema<ITeamMember>({
-    _id: { type: String },
+    _id: { type: String, auto: true },
     firstName: { type: String, required: true },
     lastName:  { type: String, required: true },
     mainRole:  { type: String, required: true },
