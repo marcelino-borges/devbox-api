@@ -75,7 +75,7 @@ export const createTeammate = async (req: Request, res: Response, next: any) => 
         const docCreated = await team.create(newTeammate);
 
         if(docCreated)
-            return res.status(201).json();
+            return res.status(201).json(newTeammate);
         else
             return res.status(400).json(new AppError(NOT_CREATED));
     } catch(e: any) {
