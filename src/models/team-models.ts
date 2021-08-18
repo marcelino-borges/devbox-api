@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 export interface ITeamMember {
-    _id: number;
+    _id: string;
     firstName: string;
     lastName: string;
     mainRole: string;
@@ -12,7 +12,7 @@ export interface ITeamMember {
   }
   
   const schema = new Schema<ITeamMember>({
-    _id: { type: Number },
+    _id: { type: String },
     firstName: { type: String, required: true },
     lastName:  { type: String, required: true },
     mainRole:  { type: String, required: true },
