@@ -65,9 +65,7 @@ export const createTeammate = async (req: Request, res: Response, next: any) => 
     try {
         const newTeammate: ITeamMember = req.body;
 
-        const foundTeammate = await team.findOne({ 
-            $or: [{ _id: newTeammate._id }, { email: newTeammate.email }]
-        });
+        const foundTeammate = await team.findOne({ email: newTeammate.email });
 
         if(foundTeammate)
             return res.status(400).json(new AppError(TEAMMATE_ALREADY_EXIST));
