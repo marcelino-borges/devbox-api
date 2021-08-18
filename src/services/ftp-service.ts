@@ -26,7 +26,7 @@ export const uploadFileToFTP = async (
                 "TO: " + destinyFilePath);
             removeLocalFile(originFilePath);
             client.close();
-            return response.status(200).json({ destinyPath: destinyFilePath });
+            return response.status(200).json({ url: process.env.DEVBOX_DOMAIN + "/storage/" + destinyFilePath.replace("/public_html/", "") });
         }).catch((err: any) => {
             log("ERROR uploading file",
                 "FROM: " + originFilePath,
