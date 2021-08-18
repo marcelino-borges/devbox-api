@@ -35,7 +35,7 @@ export const getMemberByName = async (req: Request, res: Response, next: any) =>
 
 export const getMemberById = async (req: Request, res: Response, next: any) => {
     try {
-        const idSearched = Number.parseInt(req.params.id, 10);
+        const idSearched = req.params.id as string;
         let memberFound = await team.findOne({ _id: idSearched });
 
         if(memberFound)
@@ -103,7 +103,7 @@ export const updateTeammate = async (req: Request, res: Response, next: any) => 
 
 export const deleteTeammate = async (req: Request, res: Response, next: any) => {
     try {
-        const idSearched: number | undefined = Number.parseInt(req.query.id as string);
+        const idSearched: string | undefined = req.query.id as string;
         const emailSearched: string = req.query.email as string;
         let found;
 
