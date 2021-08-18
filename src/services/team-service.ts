@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import omit from "lodash.omit";
 import team, { ITeamMember } from '../models/team-models';
 import AppError, { INVALID_QUERY, NOT_CREATED, NO_TEAMMATES, TEAMMATE_ALREADY_EXIST, TEAMMATE_NOT_FOUND } from './../errors/app-error';
 
@@ -85,10 +86,10 @@ export const createTeammate = async (req: Request, res: Response, next: any) => 
 export const updateTeammate = async (req: Request, res: Response, next: any) => {
     try {
         const teammate: ITeamMember = req.body;
-
+        const withoutId = omit(teammate, "_id");
         const found = await team.findOneAndReplace({ 
             $or: [{ _id: teammate._id }, { email: teammate.email }]}, 
-            teammate,
+            withoutId,
             { new: true } //Returns the updated json from database
         );
 

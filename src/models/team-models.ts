@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 export interface ITeamMember {
-    _id: string;
+    _id?: string;
     firstName: string;
     lastName: string;
     mainRole: string;
