@@ -43,7 +43,6 @@ app.use("/api/v1/portfolio", portfolioRouter);
 app.use("/api/v1/team", teamRouter);
 app.use("/api/v1/files", filesRouter);
 
-log("Creating folders...");
 fs.mkdir("./public/uploads/img", { recursive: true }, (error) => log("ERROR creating path ./public/uploads/img", "ERROR: " + error));
 
 app.listen(PORT || 8080, () => {
