@@ -2,10 +2,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from 'helmet';
 import express from "express";
+import fs from "fs";
 import connectMongo from "./mongo/config";
 import portfolioRouter from "./routes/portfolio-routes";
 import teamRouter from "./routes/team-routes";
 import filesRouter from "./routes/files.routes";
+import { log } from "./utils/utils";
 
 dotenv.config();
 
@@ -40,6 +42,9 @@ app.use(express.json());
 app.use("/api/v1/portfolio", portfolioRouter);
 app.use("/api/v1/team", teamRouter);
 app.use("/api/v1/files", filesRouter);
+
+log("Creating folders...");
+fs.mkdir("./public/uploads/img", { recursive: true }, (error) => log("ERROR creating path ./public/uploads/img", "ERROR: " + error));
 
 app.listen(PORT || 8080, () => {
     console.log(`Listening on port ${PORT}`);

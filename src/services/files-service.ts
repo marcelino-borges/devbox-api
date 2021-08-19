@@ -8,12 +8,8 @@ import AppError, {
     MISSING_USER_EMAIL_SENDER 
 } from "../errors/app-error";
 import { TEMP_LOCAL_PATH_ON_UPLOAD } from "../utils/files-utils";
-import { 
-    deleteFileFromFTPByPathAndFileName,
-    deleteFileFromFTPByCompletePath,
-    uploadFileToFTP 
-} from "./ftp-service";
-import { replaceAllSpacesByUnderlines } from "../utils/utils";
+import * as ftpService from "./ftp-service";
+import { log, replaceAllSpacesByUnderlines } from "../utils/utils";
 
 /*// Model of a file object: req.file
     {
@@ -46,7 +42,7 @@ export const uploadFile = async (req: Request, res: Response, next: any) => {
         const originFilePath = TEMP_LOCAL_PATH_ON_UPLOAD + "/" + req.file?.filename;
         const destinyFilePath = ftpPath + "/" + req.file?.filename;
 
-        uploadFileToFTP(
+        ftpService.uploadFileToFTP(
             originFilePath, 
             destinyFilePath, 
             true, 
@@ -65,12 +61,12 @@ export const deleteFile = async (req: Request, res: Response, next: any) => {
         const fileName: string = req.query.fileName as string;
 
         if(!!completePath) {
-            deleteFileFromFTPByCompletePath(completePath, res);
+            ftpService.deleteFileFromFTPByCompletePath(completePath, res);
         } else {
             if(!path || !fileName)
                 return res.status(400).json(new AppError(MISSING_PARAMS_DELETE, 400));
 
-            deleteFileFromFTPByPathAndFileName(path, fileName, res);
+                ftpService.deleteFileFromFTPByPathAndFileName(path, fileName, res);
         }
     } catch(e: any) {
         return res.status(500).json(new AppError(e.message, 500));
