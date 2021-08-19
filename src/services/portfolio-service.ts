@@ -38,7 +38,7 @@ export const getJobByName = async (req: Request, res: Response, next: any) => {
 
 export const getJobById = async (req: Request, res: Response, next: any) => {
     try {
-        const idSearched = Number.parseInt(req.params.id, 10);
+        const idSearched = req.params.id as string;
         
         const jobFound = await portfolio.findOne({ _id: idSearched });
 
@@ -55,9 +55,7 @@ export const createPortfolio = async (req: Request, res: Response, next: any) =>
     try {
         const newJob: IPortfolioItem = req.body;
 
-        const foundJob = await portfolio.findOne({ 
-            $or: [{ _id: newJob._id }, { name: newJob.name }] 
-        });
+        const foundJob = await portfolio.findOne({ name: newJob.name });
 
         if(foundJob)
             return res.status(400).json(new AppError(PORTFOLIO_ALREADY_EXIST));
@@ -78,7 +76,7 @@ export const updatePortfolio = async (req: Request, res: Response, next: any) =>
         const job: IPortfolioItem = req.body;
 
         const found = await portfolio.findOneAndReplace({ 
-            $or: [{ _id: job._id }, { email: job.name }]}, 
+            $or: [{ _id: job._id }, { name: job.name }]}, 
             job,
             { new: true } //Returns the updated json from database
         );
@@ -94,7 +92,7 @@ export const updatePortfolio = async (req: Request, res: Response, next: any) =>
 
 export const deletePortfolio = async (req: Request, res: Response, next: any) => {
     try {
-        const idSearched: number | undefined = Number.parseInt(req.query.id as string);
+        const idSearched: string = req.query.id as string;
         const nameSearched: string = req.query.name as string;
         let found;
 
