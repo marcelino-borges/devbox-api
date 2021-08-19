@@ -3,7 +3,7 @@ import fs from "fs";
 
 export const ACCEPTED_TYPES: string[] = [ ".jpg", ".jpeg", ".png", ".gif" ];
 export const MAX_SIZE_IMG: number = 10000000;
-export const TEMP_LOCAL_PATH_ON_UPLOAD:string = "./public/uploads/img";
+export const TEMP_LOCAL_PATH_ON_UPLOAD:string = ".src/public/uploads/img";
 
 export const initializeMulter = () => {
     const storage = multer.diskStorage({
