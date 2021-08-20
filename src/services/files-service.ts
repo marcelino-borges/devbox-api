@@ -62,8 +62,7 @@ export const deleteFile = async (req: Request, res: Response, next: any) => {
         const fileName: string = req.query.fileName as string;
 
         if(!!url) {
-            const domainRemoved = url.replace(process.env.DEVBOX_DOMAIN as string, "");
-            ftpService.deleteFileFromFTPByCompletePath(domainRemoved, res);
+            ftpService.deleteFileFromFTPByUrl(url, res);
         } else if(!!completePath) {
             ftpService.deleteFileFromFTPByCompletePath(completePath, res);
         } else {

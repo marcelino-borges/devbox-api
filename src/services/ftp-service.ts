@@ -105,6 +105,37 @@ export const deleteFileFromFTPByCompletePath = async (
     }
 }
 
+export const deleteFileFromFTPByUrl = async (
+    url: string,
+    response: any
+) => {
+    let client;
+
+    try {
+        client = await connectFtp();
+        client.ftp.verbose = true;
+
+        let domainRemoved = url.replace(process.env.DEVBOX_DOMAIN as string, "");
+        if(domainRemoved.includes("/storage")) domainRemoved = domainRemoved.replace("/storage", "");
+
+        let path: string = "/public_html/storage";
+
+        path += url[0] !== "/" ? "/" + url : url;
+
+        await client.remove(path).then((_: any) => {
+            log("SUCCESS deleting file:", url);
+            return response.status(200).json();
+        }).catch((err: any) => {
+            log("ERROR deleting file:", url, "ERROR: " + err);
+            return response.status(400).json(new AppError(err.message, 400));
+        });
+    } catch (error: any) {
+        if(!!client)
+            client.close();
+        return response.status(500).json(new AppError(error.message, 500));
+    }
+}
+
 const connectFtp = async (): Promise<any> => {
     const client = new basicFtp.Client();
     await client.access({
