@@ -8,7 +8,7 @@ export interface ITeamMember {
     email: string;
     secondaryRoles?: string[];
     memberSince: Date;
-    picture: string;
+    picture?: string;
   }
   
   const schema = new Schema<ITeamMember>({
@@ -18,7 +18,7 @@ export interface ITeamMember {
     email:  { type: String, required: true },
     secondaryRoles:  { type: [String] },
     memberSince:  { type: Date, required: true },
-    picture:  { type: String, required: true },
+    picture:  { type: String },
   });
 
   export default model<ITeamMember>("Team", schema);
