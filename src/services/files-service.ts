@@ -56,11 +56,15 @@ export const uploadFile = async (req: Request, res: Response, next: any) => {
 
 export const deleteFile = async (req: Request, res: Response, next: any) => {
     try {
+        const url: string = req.query.url as string;
         const completePath: string = req.query.completePath as string;
         const path: string = req.query.path as string;
         const fileName: string = req.query.fileName as string;
 
-        if(!!completePath) {
+        if(!!url) {
+            const domainRemoved = url.replace(process.env.DEVBOX_DOMAIN as string, "");
+            ftpService.deleteFileFromFTPByCompletePath(domainRemoved, res);
+        } else if(!!completePath) {
             ftpService.deleteFileFromFTPByCompletePath(completePath, res);
         } else {
             if(!path || !fileName)
