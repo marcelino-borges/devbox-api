@@ -120,7 +120,7 @@ export const deleteFileFromFTPByUrl = async (
 
         let path: string = "/public_html/storage";
 
-        path += url;
+        path += domainRemoved;
 
         await client.remove(path).then((_: any) => {
             log("SUCCESS deleting file:", url);
