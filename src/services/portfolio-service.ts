@@ -97,7 +97,7 @@ export const deletePortfolio = async (req: Request, res: Response, next: any) =>
             found = await portfolio.findOneAndDelete({ name: nameSearched });
 
         if(found)
-            return res.status(200).json();
+            return res.status(200).json(found);
         else
             return res.status(400).json(new AppError(PORTFOLIO_NOT_FOUND));
     } catch(e: any) {
