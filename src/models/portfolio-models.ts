@@ -6,7 +6,7 @@ export interface IPortfolioItem {
   description: string;
   highlightImg: string;
   imgs: string[];
-  storeUrl: string;
+  storeUrl?: string;
   otherUrls?: string[];
 }
 
@@ -15,7 +15,7 @@ const schema = new Schema<IPortfolioItem>({
   description: { type: String, required: true },
   highlightImg: { type: String, required: true },
   imgs: { type: [String], required: true },
-  storeUrl: { type: String, required: true },
+  storeUrl: { type: String },
   otherUrls: { type: [String] },
 });
 
