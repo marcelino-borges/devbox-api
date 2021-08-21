@@ -55,15 +55,10 @@ export const createPortfolio = async (req: Request, res: Response, next: any) =>
     try {
         const newJob: IPortfolioItem = req.body;
 
-        const foundJob = await portfolio.findOne({ name: newJob.name });
-
-        if(foundJob)
-            return res.status(400).json(new AppError(PORTFOLIO_ALREADY_EXIST));
-
         const docCreated = await portfolio.create(newJob);
 
         if(docCreated)
-            return res.status(201).json();
+            return res.status(201).json(docCreated);
         else
             return res.status(400).json(new AppError(NOT_CREATED));
     } catch(e: any) {
@@ -75,8 +70,8 @@ export const updatePortfolio = async (req: Request, res: Response, next: any) =>
     try {
         const job: IPortfolioItem = req.body;
 
-        const found = await portfolio.findOneAndReplace({ 
-            $or: [{ _id: job._id }, { name: job.name }]}, 
+        const found = await portfolio.findOneAndReplace(
+            { _id: job._id }, 
             job,
             { new: true } //Returns the updated json from database
         );
