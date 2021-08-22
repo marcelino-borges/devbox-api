@@ -16,6 +16,9 @@ export const INVALID_FILE_UPLOADED = "The uploaded file is invalid (eg. 'undefin
 export const MISSING_USER_EMAIL_SENDER = "The user email is missing from the form-data sent in the body of the request.";
 export const MISSING_PARAMS_DELETE = "Parameter necessary for deletion is missing.";
 
+export const NO_LOGS = "No logs found.";
+export const MISSING_PARAM_TYPE = "Parameter 'type' is missing.";
+
 class AppError {
     public readonly message: string;
     public readonly statusCode: number;
