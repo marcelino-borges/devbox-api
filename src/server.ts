@@ -6,7 +6,8 @@ import fs from "fs";
 import connectMongo from "./mongo/config";
 import portfolioRouter from "./routes/portfolio-routes";
 import teamRouter from "./routes/team-routes";
-import filesRouter from "./routes/files.routes";
+import filesRouter from "./routes/files-routes";
+import logsRouter from "./routes/logs-routes";
 import { log } from "./utils/utils";
 
 dotenv.config();
