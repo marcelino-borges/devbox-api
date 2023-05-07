@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm install && tsc",
     "start": "node ./dist/server.js",
     "dev": "nodemon -x ts-node src/server.ts",
     "push_github": "git checkout main && git merge master && git push github main && git checkout master"
